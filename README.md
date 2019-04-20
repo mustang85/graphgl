@@ -156,3 +156,95 @@ type Comment {
     title: String!
     videoId: String
 }
+
+Mutation (Изменение данных)
+Аналог POST, PUT, PUTCH, DELETE
+
+mutation {
+    createPost(input: {
+        title: "",
+        content: "..."
+        status: DRAFT
+        author: {
+            firstname: "Kirill"
+            lastname: "Granev"
+            status: DRAFT
+        }
+    })
+}
+
+createPost - название изменения (можно представить что это просто функция, которая 
+принимает параметр input и передаем аргумент в виде объекта)
+
+Учится будем здесь github graphgl api explorer
+
+{
+  viewer {
+    gists(first: 3) {
+      nodes {
+        id
+        name
+        isPublic
+      }
+    }
+  }
+}
+
+в отличие от REST в GraphQL нет кодов ошибок, а генерируется ошибка в которой понятно что случилось
+
+query {
+    repository(owner: "facebook", name: "react") {
+        name   
+    }
+}
+
+{
+  graphql: repository(owner: "facebook", name: "react") {
+    id
+    name
+    description
+    createdAt
+    homepageUrl
+    languages(first: 5) {
+        nodes {
+            name
+        }
+    }
+  }
+  
+  react: repository(owner: "facebook", name: "graphql") {
+    id
+    name
+    description
+    createdAt
+    homepageUrl
+    languages(first: 5) {
+        nodes {
+            name
+        }
+    }
+  }
+}
+чтобы граф не ругался, добавляем свойство graphql
+чтобы избежать повторения данных в graphql есть fragment
+{
+  graphql: repository(owner: "facebook", name: "react") {
+    ...repoDetails
+  }
+  react: repository(owner: "facebook", name: "graphql") {
+    ...repoDetails
+  }
+}
+
+fragment repoDetails on Repository {
+ id
+ name
+ description
+ createdAt
+ homepageUrl
+ languages(first: 5) {
+ 	nodes {
+		name
+ 	}
+ } 
+}
